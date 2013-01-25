@@ -38,11 +38,14 @@ module Services
       key.split('/').last
     end
 
-    def cache(file)
-      filepath = File.join(cache_dir(file.key), filename(file.key))
-      File.open(filepath, "w+:utf-8:ascii-8bit") do |f|
-        f.write file.body
+    def cache(key)
+      filepath = File.join(cache_dir(key), filename(key))
+      @local_file = File.open(filepath, "w+:utf-8:ascii-8bit")
+      streamer = lambda do |chunk, remaining, total|
+        @local_file.write chunk
       end
+      files.get(key, {}, streamer)
+      @local_file.close
       filepath
     end
 

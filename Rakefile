@@ -20,7 +20,8 @@ task :diff_and_cache_missing do
   src.files.each do |archived_file|
     filename = src.filename(archived_file.key)
 
-    target = dest.files.get(archived_file.key)
+    target = dest.files.head(archived_file.key)
+
     if not target.nil? and target.persisted?
       print "File##{count}: Exists in destination\n"
     else
@@ -34,7 +35,7 @@ task :diff_and_cache_missing do
 
       # cache file from source bucket
       print "- downloading #{filename}..."
-      cache_path = src.cache(archived_file)
+      cache_path = src.cache(archived_file.key)
       print " done!\n"
       download_count += 1
 
