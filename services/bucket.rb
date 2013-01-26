@@ -44,7 +44,7 @@ module Services
       streamer = lambda do |chunk, remaining, total|
         @local_file.write chunk
       end
-      files.get(key, {}, streamer)
+      files.get(key, &streamer)
       @local_file.close
       filepath
     end
@@ -58,8 +58,9 @@ module Services
     end
 
     def clear_cache(key)
-      #FileUtils.remove_path(cache_dir(key))
-      print "Removing #{cache_dir(key)}\n"
+      filepath = File.join(cache_dir(key), filename(key))
+      FileUtils.remove_file(filepath)
+      print "Removing #{filepath}\n"
     end
   end
 end

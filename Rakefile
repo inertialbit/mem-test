@@ -38,7 +38,7 @@ task :diff_and_cache_missing do
       cache_path = src.cache(archived_file.key)
       print " done!\n"
       download_count += 1
-
+      src.clear_cache(archived_file.key)
       # process cached file
       # upload to destination
     end
